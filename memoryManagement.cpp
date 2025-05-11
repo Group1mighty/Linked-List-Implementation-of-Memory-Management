@@ -6,8 +6,8 @@
 using namespace std;
 // we use camel case for the variable and fucntion naming
 // look we use each memory size in KB for the whole implementation
-int allocationUnit = allocationUnit; // it uses allocationUnit KB allocation unit it may change based on the thing we want
-int totalMemorySize = 10240;         // total memory capacity is 10240 KB which is 10 MB
+int allocationUnit = 5;      // it uses allocationUnit KB allocation unit it may change based on the thing we want
+int totalMemorySize = 10240; // total memory capacity is 10240 KB which is 10 MB
 
 struct MemorySegment
 {
@@ -45,11 +45,15 @@ string allocateProcess(MemorySegment process, list<MemorySegment> &memorySegment
             {
                 if ((holeEnd - process.startingAddress) >= processTotalSpace)
                 {
+                    cout << "Hole end is " << holeEnd << "\n";
                     int beforeProcessHoleLengthOfSegment = (process.startingAddress - holeStart) / allocationUnit;
                     int afterProcessHoleLengthOfSegment = (holeEnd - (process.startingAddress + processTotalSpace)) / allocationUnit;
                     int afterProcessHoleStartingAddress = process.startingAddress + processTotalSpace;
-                    it = memorySegments.insert(it, {"H", "", holeStart, beforeProcessHoleLengthOfSegment});
+                    it->lengthOfSegment = beforeProcessHoleLengthOfSegment;
+                    it->startingAddress = holeStart;
+                    it = next(it);
                     it = memorySegments.insert(it, process);
+                    it = next(it);
                     if (afterProcessHoleLengthOfSegment > 0)
                     {
                         memorySegments.insert(it, {"H", "", afterProcessHoleStartingAddress, afterProcessHoleLengthOfSegment});
